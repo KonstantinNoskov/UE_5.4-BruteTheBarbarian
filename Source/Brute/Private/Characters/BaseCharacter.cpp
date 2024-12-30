@@ -1,13 +1,14 @@
-﻿#include "Brute/Public/Characters/BaseCharacter.h"
-
-#include "Components/CapsuleComponent.h"
-
+﻿#include "Characters/BaseCharacter.h"
 
 ABaseCharacter::ABaseCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
 	GetMesh()->SetupAttachment(GetRootComponent());
+
+	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>("WeaponMesh");
+	WeaponMesh->SetupAttachment(GetMesh(), FName("SKT_RightHand_Weapon"));
+	WeaponMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ABaseCharacter::BeginPlay()

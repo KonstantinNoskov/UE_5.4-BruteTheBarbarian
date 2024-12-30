@@ -1,4 +1,4 @@
-﻿#include "Brute/Public/Characters/BruteCharacter.h"
+﻿#include "Characters/BruteCharacter.h"
 
 
 

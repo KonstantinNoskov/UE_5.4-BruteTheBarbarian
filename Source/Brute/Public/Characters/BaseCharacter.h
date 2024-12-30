@@ -4,7 +4,7 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
-UCLASS()
+UCLASS(Abstract)
 class BRUTE_API ABaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -21,5 +21,9 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USkeletalMeshComponent> CharacterMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TObjectPtr<USkeletalMeshComponent> WeaponMesh;
+	
 	
 };

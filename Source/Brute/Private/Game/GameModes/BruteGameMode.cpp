@@ -1,1 +1,1 @@
-﻿#include "../../../Public/Game/GameMode/BruteGameMode.h"
+﻿#include "Game/GameMode/BruteGameMode.h"

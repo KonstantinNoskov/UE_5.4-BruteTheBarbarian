@@ -1,4 +1,4 @@
-﻿#include "Brute/Public/Game/Controllers/BasePlayerController.h"
+﻿#include "Game/Controllers/BasePlayerController.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -11,7 +11,12 @@ ABasePlayerController::ABasePlayerController()
 void ABasePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	AssignMappingContext();
+}
 
+void ABasePlayerController::AssignMappingContext()
+{
 	// Mapping context should be set
 	check(BruteContext)
 	
@@ -30,6 +35,7 @@ void ABasePlayerController::SetupInputComponent()
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABasePlayerController::Move);
+	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABasePlayerController::Look);
 	
 }
 
@@ -47,7 +53,16 @@ void ABasePlayerController::Move(const FInputActionValue& InputActionValue)
 	{
 		ControlledPawn->AddMovementInput(ForwardDirection, InputAxisVector.Y);
 		ControlledPawn->AddMovementInput(RightDirection, InputAxisVector.X);
-		
+	}
+}
+void ABasePlayerController::Look(const FInputActionValue& InputActionValue)
+{
+	const FVector2D LookAxisVector = InputActionValue.Get<FVector2D>();
+
+	if (APawn* ControlledPawn = GetPawn<APawn>())
+	{
+		ControlledPawn->AddControllerPitchInput(LookAxisVector.Y);
+		ControlledPawn->AddControllerYawInput(LookAxisVector.X);
 	}
 }
 
