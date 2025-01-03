@@ -2,6 +2,8 @@
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Characters/Movement/PlayerMovementComponent.h"
+
 
 ABasePlayerController::ABasePlayerController()
 {
@@ -13,6 +15,7 @@ void ABasePlayerController::BeginPlay()
 	Super::BeginPlay();
 	
 	AssignMappingContext();
+	
 }
 
 void ABasePlayerController::AssignMappingContext()
@@ -36,7 +39,10 @@ void ABasePlayerController::SetupInputComponent()
 
 	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABasePlayerController::Move);
 	EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABasePlayerController::Look);
-	
+	EnhancedInputComponent->BindAction(WalkAction, ETriggerEvent::Started, this, &ABasePlayerController::Walk);
+	//EnhancedInputComponent->BindAction(WalkAction, ETriggerEvent::Completed, this, &ABasePlayerController::Walk);
+	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &ABasePlayerController::Sprint);
+	EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ABasePlayerController::Sprint);
 }
 
 void ABasePlayerController::Move(const FInputActionValue& InputActionValue)
@@ -63,6 +69,35 @@ void ABasePlayerController::Look(const FInputActionValue& InputActionValue)
 	{
 		ControlledPawn->AddControllerPitchInput(LookAxisVector.Y);
 		ControlledPawn->AddControllerYawInput(LookAxisVector.X);
+	}
+}
+
+void ABasePlayerController::Walk(const FInputActionValue& InputActionValue)
+{
+	//const bool bWantsToWalk = InputActionValue.Get<bool>();
+	
+	bWantsToWalk = !bWantsToWalk;
+	if (bWantsToWalk)
+	{
+		OnMovementPressedDelegate.Broadcast(ECustomMovementMode::Walk);	
+	}
+	else
+	{
+		OnMovementPressedDelegate.Broadcast(ECustomMovementMode::Jog);	
+	}
+}
+
+void ABasePlayerController::Sprint(const FInputActionValue& InputActionValue)
+{
+	const bool bWantsToSprint = InputActionValue.Get<bool>();
+	
+	if (bWantsToSprint)
+	{
+		OnMovementPressedDelegate.Broadcast(ECustomMovementMode::Sprint);	
+	}
+	else
+	{
+		OnMovementPressedDelegate.Broadcast(ECustomMovementMode::Jog);
 	}
 }
 

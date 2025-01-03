@@ -11,7 +11,7 @@ class BRUTE_API AEnemyCharacter : public ABaseCharacter
 
 public:
 
-	AEnemyCharacter();
+	AEnemyCharacter(const FObjectInitializer& ObjectInitializer);
 
 protected:
 
